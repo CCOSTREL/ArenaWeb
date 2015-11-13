@@ -9,7 +9,10 @@
         <h2 class="text-center lato animate slideInDown">This Game will <b>change</b> your life !</h2>
         <p class="text-center">
             <br>
-            <a href="#" class="btn btn-danger btn-lg btn-huge lato" data-toggle="modal" data-target="#myModal">Connexion</a>
+            <?php
+            if (!($this->Session->read('Auth.User'))){
+                echo $this->Html->link('Connexion', array('controller' => 'Users', 'action' => 'login'), array( 'class' => 'btn btn-danger btn-lg btn-huge lato')); 
+            }?>
         </p>
     </div>
     <a href="#section2">

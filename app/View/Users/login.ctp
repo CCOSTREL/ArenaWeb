@@ -8,6 +8,7 @@
                 <fieldset>
                         <legend><?php echo __('Connexion'); ?></legend>
                         <?php 
+                        if(isset($message)){echo($message);}
                         echo $this->Form->input('email');
                         echo $this->Form->input('password');
                     ?>
@@ -19,7 +20,7 @@
     </div>
     
     <div class="col-sm-6 ">
-        <?php echo $this->Html->link('S\'inscrire', array('controller' => 'Users', 'action' => 'register'), array( 'class' => 'btn btn-warning btn-lg center-block')); ?>
+        <?php echo $this->Html->link('Inscription', array('controller' => 'Users', 'action' => 'register'), array( 'class' => 'btn btn-warning btn-lg center-block')); ?>
      </div>
     
     
