@@ -26,8 +26,6 @@ class ArenasController extends AppController
      * @return [type] [description]
      */
     public function sight(){
-        debug("");
-        debug("");
         //Move or Attack according to the form
         $idFighterSelected=$this->Session->read("User.fighter");
         $fighterAlive=$this->Fighter->find('first', array("conditions"=>array("Fighter.id"=>$idFighterSelected)));
@@ -44,7 +42,8 @@ class ArenasController extends AppController
                     $this->Fighter->doMove($this->request->data[$key]['direction']);
                     $this->Event->addEvent("move");
                 }else if($key=="Fighterattack"){
-                    $this->Fighter->doAttack($this->request->data[$key]['direction']);
+                     $this->set('messageAttaque', $this->Fighter->doAttack($this->request->data[$key]['direction']));
+                    
                     $this->Event->addEvent("attack");
                 }else if($key=="lvlupform"){
                     $this->Event->addEvent("level up");

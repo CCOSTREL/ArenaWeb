@@ -92,7 +92,7 @@ class Fighter extends AppModel {
           $findFighter=$this->find('first', array('conditions'=>array( "Fighter.coordinate_x"=>$cooXAtk,"Fighter.coordinate_y"=>$cooY)));
 
                 //start the attack algorithm
-          $this->attackProcess($findFighter,$myFighter);
+          $errorMessage=$this->attackProcess($findFighter,$myFighter);
           
 
         }else{
@@ -108,7 +108,7 @@ class Fighter extends AppModel {
           //debug($this->find('all'));
           $cooXAtk=$cooX-1;
           $findFighter=$this->find('first', array('conditions'=>array( "Fighter.coordinate_x"=>$cooXAtk,"Fighter.coordinate_y"=>$cooY)));
-          $this->attackProcess($findFighter,$myFighter);
+          $errorMessage=$this->attackProcess($findFighter,$myFighter);
           
 
         }else{
@@ -121,7 +121,7 @@ class Fighter extends AppModel {
           //debug($this->find('all'));
           $cooYAtk=$cooY+1;
           $findFighter=$this->find('first', array('conditions'=>array( "Fighter.coordinate_x"=>$cooX,"Fighter.coordinate_y"=>$cooYAtk)));
-          $this->attackProcess($findFighter,$myFighter);
+          $errorMessage=$this->attackProcess($findFighter,$myFighter);
           
 
         }else{
@@ -134,7 +134,7 @@ class Fighter extends AppModel {
           //debug($this->find('all'));
           $cooYAtk=$cooY-1;
           $findFighter=$this->find('first', array('conditions'=>array( "Fighter.coordinate_x"=>$cooX,"Fighter.coordinate_y"=>$cooYAtk)));
-          $this->attackProcess($findFighter,$myFighter);
+          $errorMessage=$this->attackProcess($findFighter,$myFighter);
           
 
         }else{
@@ -145,18 +145,17 @@ class Fighter extends AppModel {
         }
 
         if(!empty($errorMessage)){
-            debug($errorMessage);
-        }
-
+            return($errorMessage);
+        }else return null;
     }
 
     private function attackProcess($findFighter, $myFighter){
 
         //Check if there's a fighter in the attack coo
       if(empty($findFighter)){
-         debug("no fighter here");
+          $messageAttaque ='Aucun guerrier ici.';
         }else{
-            debug("fighter found");
+             $messageAttaque = "fighter found";
                //Get the fighter attacked
             $fighterDef=$findFighter["Fighter"];
           //$randVal=rand(1,20);
@@ -165,7 +164,7 @@ class Fighter extends AppModel {
             $fighterAtkLvl=$myFighter["level"];
             //Check if attack successed
             if($randVal>(10+($fighterDefLvl-$fighterAtkLvl))){
-               debug("attack successed");
+               $messageAttaque = "attack successed";
                 //change XP of the attacker and health of the attacked
                $myFighter["xp"]++;
                $fighterDef["current_health"]-=$myFighter["skill_strength"];
@@ -173,7 +172,7 @@ class Fighter extends AppModel {
                 //up XP of the attacker
                 $this->save($fighterDef);
                if($fighterDef["current_health"]<=0){
-                  debug("fighter def is dead");
+                  $messageAttaque = "fighter def is dead";
                   $fighterDef["current_health"]=0;
                   $myFighter["xp"]+=$fighterDefLvl;
                   $toolModel=new Tool();
@@ -182,11 +181,12 @@ class Fighter extends AppModel {
                }
 
             }else{
-               debug("attack failed");
+               $messageAttaque = "attack failed";
             }
         }
 
         $this->save($myFighter);
+        return $messageAttaque;
     }
 
     public function createFighter($newName, $idUser=null){
